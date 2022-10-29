@@ -1,7 +1,7 @@
 version "4.8.0"
 
 // The main utils class:
-class JGP_VisualTracer play abstract
+class JGP_VisualTrace play abstract
 {
 
 	// This fires a tracer and draws particles along
@@ -22,7 +22,7 @@ class JGP_VisualTracer play abstract
 		let ppawn = PlayerPawn(originator);
 		if (ppawn)
 		{
-			atkheight = JGP_VisualTracer.GetPlayerAtkHeight(ppawn);
+			atkheight = JGP_VisualTrace.GetPlayerAtkHeight(ppawn);
 		}
 		
 		// Do the trace:
@@ -47,7 +47,7 @@ class JGP_VisualTracer play abstract
 		vector3 nextPos = startpos;
 		for (int i = 1; i <= partSteps; i++)
 		{
-			let trv = JGP_TraceVisualizer(Actor.Spawn("JGP_TraceVisualizer", nextPos));
+			let trv = JGP_VisualTraceParticle(Actor.Spawn("JGP_VisualTraceParticle", nextPos));
 			if (trv)
 				trv.age = partTics;
 			nextPos += dir * partDist;
@@ -71,7 +71,7 @@ class JGP_VisualTracer play abstract
 // to visualize the LineTrace.
 // It uses a sprite already present in
 // gzdoom.pk3
-class JGP_TraceVisualizer : Actor
+class JGP_VisualTraceParticle : Actor
 {
 	int age;
 
@@ -116,7 +116,7 @@ class JGP_TraceFromFace : Inventory
 			return;
 		}
 		
-		JGP_VisualTracer.FireVisualTracer(owner, 400);
+		JGP_VisualTrace.FireVisualTracer(owner, 400);
 	}
 }
 
@@ -127,6 +127,6 @@ class JGP_ZombiemanWithTrace : Zombieman
 	override void Tick()
 	{
 		super.Tick();
-		JGP_VisualTracer.FireVisualTracer(self, 256, partDist: 2);
+		JGP_VisualTrace.FireVisualTracer(self, 256, partDist: 2);
 	}
 }
