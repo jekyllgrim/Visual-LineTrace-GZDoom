@@ -4,10 +4,9 @@ version "4.8.0"
 class JGP_VisualTrace play abstract
 {
 
-	// This fires a tracer and draws particles along
-	// its distance.
-	// partDist determines how far the particles are
-	// partTics determines for how long they will exist
+	// This fires a tracer and draws particles along its distance.
+	// partDist - distance between particles
+	// partTics - lifetime of particles
 	static void FireVisualTracer(Actor originator, double dist, int flags = 0, double partDist = 1, int partTics = 1, color partColor = color("00FF00"))
 	{
 		if (!originator || dist <= 0)
@@ -32,16 +31,25 @@ class JGP_VisualTrace play abstract
 		// Get start and end positions:
 		vector3 startpos = originator.pos + (0,0, atkheight);
 		vector3 endpos = tr.HitLocation;
-		
+
+		JGP_VisualTrace.DrawParticlesBetweenPoints(startpos, endpos, partDist, partTics, partColor);
+	}
+
+	// This draws a particle trail between two points.
+	// partDist - distance between particles
+	// partTics - lifetime of particles
+	static void DrawParticlesBetweenPoints(vector3 startpos, vector3 endpos, double partDist = 1, int partTics = 1, color partColor = color("00FF00"), int flags = SPF_FULLBRIGHT|SPF_NOTIMEFREEZE)
+	{
 		// Get the vector between them and normalize it:
 		let diff = Level.Vec3Diff(startpos, endpos);
 		let dir = diff.Unit();
+		let dist = diff.Length();
 		
 		// Make sure distance between particles is no less
 		// than 1. From that, get how many particles
 		// we'll need to spawn:
 		partDist = Clamp(partDist, 1., dist);
-		int partSteps = int(tr.Distance / partDist);
+		int partSteps = int(dist / partDist);
 		
 		// Spawn the particles:
 		vector3 nextPos = startpos;
@@ -50,7 +58,7 @@ class JGP_VisualTrace play abstract
 		traceParticle.lifetime = partTics;		
 		traceParticle.size = 1;
 		traceParticle.StartAlpha = 1;
-		traceParticle.flags = SPF_FULLBRIGHT|SPF_NOTIMEFREEZE;
+		traceParticle.flags = flags;
 		for (int i = 1; i <= partSteps; i++)
 		{
 			traceParticle.pos = nextPos;
@@ -59,8 +67,7 @@ class JGP_VisualTrace play abstract
 		}
 	}
 	
-	// This gets the exact attack height of the
-	// giver PlayerPawn:
+	// This gets the exact attack height of the given PlayerPawn:
 	static double GetPlayerAtkHeight(PlayerPawn ppawn)
 	{
 		if (!ppawn)
