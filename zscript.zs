@@ -8,7 +8,7 @@ class JGP_VisualTrace play abstract
 	// its distance.
 	// partDist determines how far the particles are
 	// partTics determines for how long they will exist
-	static void FireVisualTracer(Actor originator, double dist, int flags = 0, double partDist = 1, int partTics = 1)
+	static void FireVisualTracer(Actor originator, double dist, int flags = 0, double partDist = 1, int partTics = 1, color partColor = color("00FF00"))
 	{
 		if (!originator || dist <= 0)
 			return;
@@ -45,11 +45,16 @@ class JGP_VisualTrace play abstract
 		
 		// Spawn the particles:
 		vector3 nextPos = startpos;
+		FSpawnParticleParams traceParticle;
+		traceParticle.color1 = partColor;
+		traceParticle.lifetime = partTics;		
+		traceParticle.size = 1;
+		traceParticle.StartAlpha = 1;
+		traceParticle.flags = SPF_FULLBRIGHT|SPF_NOTIMEFREEZE;
 		for (int i = 1; i <= partSteps; i++)
 		{
-			let trv = JGP_VisualTraceParticle(Actor.Spawn("JGP_VisualTraceParticle", nextPos));
-			if (trv)
-				trv.age = partTics;
+			traceParticle.pos = nextPos;
+			Level.Spawnparticle(traceParticle);
 			nextPos += dir * partDist;
 		}
 	}
@@ -64,37 +69,6 @@ class JGP_VisualTrace play abstract
 		if (!player)
 			return 0;
 		return ppawn.height * 0.5 - ppawn.floorclip + ppawn.AttackZOffset*player.crouchFactor;
-	}
-}
-
-// An extremely simple actor that is meant
-// to visualize the LineTrace.
-// It uses a sprite already present in
-// gzdoom.pk3
-class JGP_VisualTraceParticle : Actor
-{
-	int age;
-
-	Default
-	{
-		+NOINTERACTION
-		+NOBLOCKMAP
-		+BRIGHT
-		+FORCEXYBILLBOARD
-		scale 0.1;
-	}
-	
-	override void Tick()
-	{
-		if (GetAge() > age)
-			Destroy();
-	}
-	
-	States
-	{
-	Spawn:
-		AMRK A -1;
-		stop;
 	}
 }
 
