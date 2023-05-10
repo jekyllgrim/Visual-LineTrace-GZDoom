@@ -5,7 +5,7 @@ A mini-library / example for the GZDoom engine that adds functions to draw a ser
 The functions are static, contained within the `JGP_VisualTrace`.
 
 ```csharp
-FireVisualTracer(Actor originator, double dist, int flags = 0, double partDist = 1, int partTics = 1, color partColor = color("00FF00"))`
+FireVisualTracer(Actor originator, double dist, int flags = 0, double partDist = 1, int partTics = 1, color partColor = color("00FF00"))
 ```
 
 Fires a LineTrace from the originator and draws particle along its length. Parameters:
