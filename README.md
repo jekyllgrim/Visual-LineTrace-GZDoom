@@ -1,6 +1,6 @@
 # Visualized LineTrace for GZDoom
 
-A mini-library / example for the GZDoom engine that adds functions to draw a series of particles between two coordinates, and a version of LineTrace() that is visualized with those particles.
+A mini-library / example for the GZDoom engine that adds functions to draw a series of particles between two coordinates, and a version of LineTrace() that is visualized with those particles. **Free to use, do whatever you want with it, no need to ask me.**
 
 The functions are static, contained within the `JGP_VisualTrace`.
 
